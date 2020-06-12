@@ -118,16 +118,6 @@ func init() {
 
 // Program Entry
 func main() {
-	// Prevent Ctrl+C from killing viper
-	/* NOT WORKING, hope anyone knows how to solve this problem.
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGKILL, syscall.SIGQUIT, syscall.SIGTERM)
-	go func() {
-		<-c
-		os.Exit(0)
-	}()
-	*/
-
 	// BANNER display
 	fmt.Printf("%s\n", banner)
 	fmt.Printf("Please enter number of -1 to quit, quit with 'Ctrl+C' will cause viper stop.\n\n")
@@ -158,22 +148,18 @@ func main() {
 
 		// Get user input
 		var num int
-		fmt.Scanf("%d", &num)
-
+		fmt.Scanf("%d/n", &num)
 		// Incorrect input number
 		if num > len(infos)-1 || num < -1 {
 			fmt.Printf("Wrong number, please try again.")
 			continue
-		}
-
-		// Number of exit
-		if num == -1 {
-			os.Exit(0)
-		} else {
+		} else if num < len(infos)-1 && num >= 0 {
 			// Replace config files and restart viper4linux
 			runReplacement(infos[num].Path, mainConfPath, infos[num].WithIRS)
+			continue
+		} else {
+			os.Exit(0)
 		}
-
 	}
 }
 
